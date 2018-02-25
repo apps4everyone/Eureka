@@ -105,9 +105,18 @@ open class PickerInputCell<T> : Cell<T>, CellType, UIPickerViewDataSource, UIPic
         return pickerInputRow?.options.count ?? 0
     }
 
+    open func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        
+        let text : String = pickerInputRow?.displayValueFor?(pickerInputRow?.options[row]) ?? ""
+        return NSAttributedString(string: text, attributes: [:])
+    }
+    
+    /*
     open func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+     
         return pickerInputRow?.displayValueFor?(pickerInputRow?.options[row])
     }
+    */
 
     open func pickerView(_ pickerView: UIPickerView, didSelectRow rowNumber: Int, inComponent component: Int) {
         if let picker = pickerInputRow, picker.options.count > rowNumber {
