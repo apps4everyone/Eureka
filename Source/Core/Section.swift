@@ -154,11 +154,17 @@ open class Section {
 
     public required init() {}
 
-    public init(_ initializer: (Section) -> Void) {
+    #if swift(>=4.1)
+    public required init<S>(_ elements: S) where S: Sequence, S.Element == BaseRow {
+        self.append(contentsOf: elements)
+    }
+    #endif
+
+    public init(_ initializer: @escaping (Section) -> Void) {
         initializer(self)
     }
 
-    public init(_ header: String, _ initializer: (Section) -> Void = { _ in }) {
+    public init(_ header: String, _ initializer: @escaping (Section) -> Void = { _ in }) {
         self.header = HeaderFooterView(stringLiteral: header)
         initializer(self)
     }
@@ -450,17 +456,24 @@ open class MultivaluedSection: Section {
         self.multivaluedOptions = multivaluedOptions
         super.init(header: header, footer: footer, {section in initializer(section as! MultivaluedSection) })
         guard multivaluedOptions.contains(.Insert) else { return }
-        let addRow = addButtonProvider(self)
-        addRow.onCellSelection { cell, row in
-            guard let tableView = cell.formViewController()?.tableView, let indexPath = row.indexPath else { return }
-            cell.formViewController()?.tableView(tableView, commit: .insert, forRowAt: indexPath)
-        }
-        self <<< addRow
+        initialize()
     }
 
     public required init() {
         self.multivaluedOptions = MultivaluedOptions.Insert.union(.Delete)
         super.init()
+        initialize()
+    }
+
+    #if swift(>=4.1)
+    public required init<S>(_ elements: S) where S : Sequence, S.Element == BaseRow {
+        self.multivaluedOptions = MultivaluedOptions.Insert.union(.Delete)
+        super.init(elements)
+        initialize()
+    }
+    #endif
+
+    func initialize() {
         let addRow = addButtonProvider(self)
         addRow.onCellSelection { cell, row in
             guard let tableView = cell.formViewController()?.tableView, let indexPath = row.indexPath else { return }
@@ -468,7 +481,6 @@ open class MultivaluedSection: Section {
         }
         self <<< addRow
     }
-
     /**
      Method used to get all the values of the section.
 
