@@ -45,7 +45,7 @@ open class TriplePickerInputCell<A, B, C> : _PickerInputCell<Tuple3<A, B, C>> wh
         }
     }
 
-    open override func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    open func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if component == 0 {
             return pickerRow.displayValueForFirstRow(pickerRow.firstOptions()[row])
         } else if component == 1 {

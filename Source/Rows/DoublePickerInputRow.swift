@@ -37,7 +37,7 @@ open class DoublePickerInputCell<A, B> : _PickerInputCell<Tuple<A, B>> where A: 
         return  component == 0 ? pickerRow.firstOptions().count : pickerRow.secondOptions(pickerRow.selectedFirst()).count
     }
 
-    open override func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    open func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if component == 0 {
             return pickerRow.displayValueForFirstRow(pickerRow.firstOptions()[row])
         } else {
